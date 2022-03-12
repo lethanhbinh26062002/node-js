@@ -4,6 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import productRoute from "../router/product";
 const app = express();
+import mongoose from "mongoose";
 app.use(express.json());
 
 // middleware
@@ -12,6 +13,9 @@ app.use(morgan('tiny'));
 app.use(express.json());
 
 app.use("/api",productRoute);
+mongoose.connect('mongodb://localhost:27017/web16309')
+.then(() => console.log("Kết nối DB thành công"))
+.catch((error) => console.log(error));
 // const server = http.createServer((req, res) => {
 //     console.log('url', req.url);
 //     if(req.url === "/") {
