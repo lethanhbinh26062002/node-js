@@ -1,36 +1,17 @@
 const http = require('http');
-const express = require('express');
-
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import productRoute from "../router/product";
 const app = express();
 app.use(express.json());
 
 // middleware
-const check = (req, res, next) => {
-    const status = true;
-    if(status) {
-        console.log("Hello");
-        next();
-    }else{
-        console.log("Fail");
-    }
-}
-app.use(check)
-// app.use((req, res,next) => {
-//     console.log('Step 2');
-//     next();
-// })
-// app.get('/',(req, res,next) => {
-//     console.log('Home');
-//     next();
-// })
-app.get('/api/products',check ,(req, res,) => {
-    const products = [
-        {id: 1, name: 'Product A'},
-        {id: 2, name: 'Product B'},
-        {id: 3, name: 'Product C'}
-    ];
-    res.json(products);
-})
+app.use(cors());
+app.use(morgan('tiny'));
+app.use(express.json());
+
+app.use("/api",productRoute);
 // const server = http.createServer((req, res) => {
 //     console.log('url', req.url);
 //     if(req.url === "/") {
