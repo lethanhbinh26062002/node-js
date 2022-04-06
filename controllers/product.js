@@ -11,7 +11,7 @@ export const list = async (req, res,) => {
     }
 };
 export const real = async (req, res) => {
-    const filter = { _id: req.params.id}
+    const filter = { _id: req.params.id }
     try {
         const product = await Product.findOne(filter).exec();
         res.json(product);
@@ -62,7 +62,7 @@ export const update = async (req, res) => {
 export const search = async (req, res) => {
     const searchString = req.query.q;
     try {
-        const product = await Product.find({$text: {$search: searchString}})
+        const product = await Product.find({ $text: { $search: searchString } })
         res.json(product);
     } catch (error) {
         console.log(error);
@@ -75,11 +75,12 @@ export const paginate = async (req, res) => {
     }
     try {
         const product = await Product.find()
-            .skip(pageOptions.page * pageOptions.limit)
-            .limit(pageOptions.limit)
+            .skip(pageOptions.page * pageOptions.limit) // bỏ qua sp
+            .limit(pageOptions.limit) // giới hạn sp
             .exec();
-            res.json(product);
+        res.json(product);
     } catch (error) {
+        res.status(400).json({ message: "Lỗi không phân trang được" })
         console.log(error);
     }
 }
@@ -89,9 +90,10 @@ export const searchPrice = async (req, res) => {
         max: parseInt(req.query.max)
     }
     try {
-        const product = await Product.filter(priceOptions.min <= {price} <= priceOptions.max).exec();
-            res.json(product);
+        const product = await Product.find({ price: { $gte:priceOptions.min, $lte:priceOptions.max} });
+        res.json(product);
     } catch (error) {
+        res.status(400).json({ message: "Lỗi không lọc theo giá" })
         console.log(error);
     }
 }
