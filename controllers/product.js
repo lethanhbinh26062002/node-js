@@ -68,3 +68,30 @@ export const search = async (req, res) => {
         console.log(error);
     }
 };
+export const paginate = async (req, res) => {
+    const pageOptions = {
+        page: parseInt(req.query.page),
+        limit: parseInt(req.query.limit)
+    }
+    try {
+        const product = await Product.find()
+            .skip(pageOptions.page * pageOptions.limit)
+            .limit(pageOptions.limit)
+            .exec();
+            res.json(product);
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const searchPrice = async (req, res) => {
+    const priceOptions = {
+        min: parseInt(req.query.min),
+        max: parseInt(req.query.max)
+    }
+    try {
+        const product = await Product.filter(priceOptions.min <= {price} <= priceOptions.max).exec();
+            res.json(product);
+    } catch (error) {
+        console.log(error);
+    }
+}
