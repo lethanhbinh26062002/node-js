@@ -44,9 +44,9 @@ export const signIn = async (req, res) => {
             res.status(400).json({message: 'Email không tồn tại'});
         }
         if(!user.authenticate(password)) {
-            res.status(400).json({message: 'Sai mật khẩu'});
+            res.status(400).json({message: 'Sai mật khẩu'}); 
         }
-        const token = jwt.sign({_id: user._id},"bin26",{expiresIn: 60*60 }) // jwt.sign(): Tạo token __________ expiresIn: Settime tồn tại token
+        const token = jwt.sign({_id: user._id},"bin26",{expiresIn: '24h' }) // jwt.sign(): Tạo token __________ expiresIn: Settime tồn tại token
         res.json({
             token: token,
             user:{

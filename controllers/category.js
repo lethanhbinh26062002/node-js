@@ -23,3 +23,31 @@ export const real = async ( req, res) => {
 
     }
 } 
+export const list = async ( req, res) => {
+    try {
+        const categories = await Category.find().exec();
+        res.json(categories)
+    } catch (error) {
+        
+    }
+}
+export const remove = async ( req, res) => {
+    const condition = { _id: req.params.id};
+    try {
+        const categorie = await Category.findOneAndDelete(condition).exec();
+        res.json(categorie)
+    } catch (error) {
+        
+    }
+}
+export const update = async ( req, res) => {
+    const condition = { _id: req.params.id};
+    const document = req.body;
+    const options = { new: true}
+    try {
+        const category = await Category.findOneAndUpdate(condition, document, options).exec();
+        res.json(category)
+    } catch (error) {
+        
+    }
+}

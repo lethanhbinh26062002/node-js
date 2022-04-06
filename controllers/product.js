@@ -1,4 +1,5 @@
 import Product from "../models/product";
+import toastr from "toastr"
 export const list = async (req, res,) => {
     try {
         const products = await Product.find().sort({ createAt: -1 });
@@ -51,9 +52,19 @@ export const update = async (req, res) => {
     const options = { new: true }
     try {
         const product = await Product.findOneAndUpdate(condition, doc, options);
+        toastr.success("Update thành công");
         message: "Đã update thành công";
         res.json(product);
     } catch (error) {
         res.status(400).json({ message: "Lỗi không update đc sản phẩm" })
+    }
+};
+export const search = async (req, res) => {
+    const searchString = req.query.q;
+    try {
+        const product = await Product.find({$text: {$search: searchString}})
+        res.json(product);
+    } catch (error) {
+        console.log(error);
     }
 };
