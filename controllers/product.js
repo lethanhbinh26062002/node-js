@@ -1,5 +1,5 @@
 import Product from "../models/product";
-import toastr from "toastr"
+import Comment from "../models/comment"
 export const list = async (req, res,) => {
     try {
         const products = await Product.find().sort({ createAt: -1 });
@@ -14,7 +14,10 @@ export const real = async (req, res) => {
     const filter = { _id: req.params.id }
     try {
         const product = await Product.findOne(filter).exec();
+        const id_comment = product.comment
+        const comment =  await Comment.findOne(id_comment).exec();
         res.json(product);
+        console.log("comment",comment);
     } catch (error) {
         res.status(400).json({
             message: "Lỗi không đọc được sản phẩm"
@@ -52,7 +55,6 @@ export const update = async (req, res) => {
     const options = { new: true }
     try {
         const product = await Product.findOneAndUpdate(condition, doc, options);
-        toastr.success("Update thành công");
         message: "Đã update thành công";
         res.json(product);
     } catch (error) {
@@ -70,14 +72,15 @@ export const search = async (req, res) => {
 };
 export const paginate = async (req, res) => {
     const pageOptions = {
-        page: parseInt(req.query.page),
-        limit: parseInt(req.query.limit)
+        page: parseInt(req.query.page),//0
+        limit: parseInt(req.query.limit)//5
     }
     try {
         const product = await Product.find()
             .skip(pageOptions.page * pageOptions.limit) // bỏ qua sp
             .limit(pageOptions.limit) // giới hạn sp
             .exec();
+            // ?page=0&limit=5
         res.json(product);
     } catch (error) {
         res.status(400).json({ message: "Lỗi không phân trang được" })
@@ -91,9 +94,10 @@ export const searchPrice = async (req, res) => {
     }
     try {
         const product = await Product.find({ price: { $gte:priceOptions.min, $lte:priceOptions.max} });
+        //?min=0&max=200
         res.json(product);
     } catch (error) {
-        res.status(400).json({ message: "Lỗi không lọc theo giá" })
+        res.status(400).json({ message: "Lỗi không lọc được theo giá" })
         console.log(error);
     }
 }

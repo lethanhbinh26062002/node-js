@@ -21,6 +21,10 @@ const productSchema = new Schema({
     category:{
         type: ObjectId,
         ref: "Category"
+    },
+    comment: {
+        type:ObjectId,
+        ref: "Comment"
     }
 },{timestamps: true});
 productSchema.index({'$**': 'text'});
